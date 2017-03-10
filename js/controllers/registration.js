@@ -4,7 +4,7 @@ myApp.controller('RegistrationController', ['$scope', 'Authentication',
     
 
     $scope.login = function () {
-      Authentiation.login($scope.user)      
+      Authentication.login($scope.user)      
     };
 
     $scope.register = function () {
