@@ -3,8 +3,9 @@ myApp.factory('Authentication', ['$rootScope', '$location', '$firebaseObject', '
 
     var ref = firebase.database().ref();
     var auth = $firebaseAuth();
+    var myObject;
 
-    auth.$onAuthStateChanged(function(authUser) {
+    auth.$onAuthStateChanged(function(authUser) {``
       if(authUser) {
         var userRef = ref.child('users').child(authUser.uid);
         var userObj = $firebaseObject(userRef);
@@ -13,8 +14,8 @@ myApp.factory('Authentication', ['$rootScope', '$location', '$firebaseObject', '
         $rootScope.currentUser = '';
       }
     });
-
-    return {
+    
+    myObject = {
       login: function (user) {
         auth.$signInWithEmailAndPassword(
           user.email,
@@ -25,6 +26,14 @@ myApp.factory('Authentication', ['$rootScope', '$location', '$firebaseObject', '
           $rootsScope.message = error.message;
         }); //signInWithEmailAndPassword
       }, //login
+
+      logout: function() {
+        return auth.$signOut();
+      }, //logout
+
+      requireAuth: function() {
+        return auth.$requireSignIn();
+      }, //require Authentication
 
       register: function (user) {
         auth.$createUserWithEmailAndPassword(
@@ -39,13 +48,13 @@ myApp.factory('Authentication', ['$rootScope', '$location', '$firebaseObject', '
               lastname: user.lastname,
               email: user.email
             }); //userinfo
-          $rootScope.message = "Hi " + user.firstname +
-            ", Thanks for registering";
+            myObject.login(user);
         }).catch(function (error) {
           $rootScope.message = error.message;
         }); // $createUserWithEmailAndPassword
-
       } // register
     }; // return
+
+    return myObject;
 
   }]); //factory
